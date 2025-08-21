@@ -208,6 +208,8 @@ A API foi documentada utilizando o Swagger (OpenAPI) para facilitar a visualiza�
 </table>
 </div>
 
+---
+
 <div align="center">
 <img src="https://raw.githubusercontent.com/ArthurBomfimDev/AgendaAPI/main/swagger.png" alt="Interface do Swagger" width="700">
 <p><em>Interface do Swagger para teste e documentação dos endpoints.</em></p>
