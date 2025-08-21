@@ -3,7 +3,8 @@
 public enum EnumActivityStatus
 {
     Pendente = 1,
-    Progresso,
-    Finalizado,
-    Atrasado
+    Andamento = 2,
+    Pausado = 3,
+    Concluido = 4,
+    Cancelado = 5
 }
