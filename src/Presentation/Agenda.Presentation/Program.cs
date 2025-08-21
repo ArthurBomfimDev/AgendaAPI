@@ -1,13 +1,12 @@
+using Agenda.Presentation.Extensions;
+using Agenda.Presentation.Middleware;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using TrilhaApiDesafio.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<OrganizadorContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
-
+builder.Services.ConfigureInjectionDependency();
+builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -16,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

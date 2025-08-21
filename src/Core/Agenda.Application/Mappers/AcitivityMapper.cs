@@ -5,7 +5,7 @@ namespace Agenda.Application.Mappers;
 
 public static class ActivityMapper
 {
-    public static ActivityDTO? ToOutput(this Activity? acitivity)
+    public static ActivityDTO? ToDTO(this Activity? acitivity)
     {
         return acitivity == null ? null :
             new ActivityDTO(acitivity.Id,

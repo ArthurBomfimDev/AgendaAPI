@@ -1,7 +1,22 @@
-using Agenda.Domain.Entities;
+using Agenda.Application.Features.Acitivities.Commands.UpdateDueDate;
+using Agenda.Application.Features.Acitivities.Commands.UpdatePriority;
+using Agenda.Application.Features.Activities.Commands.Cancel;
+using Agenda.Application.Features.Activities.Commands.Complete;
+using Agenda.Application.Features.Activities.Commands.Create;
+using Agenda.Application.Features.Activities.Commands.Delete;
+using Agenda.Application.Features.Activities.Commands.Pause;
+using Agenda.Application.Features.Activities.Commands.Start;
+using Agenda.Application.Features.Activities.Commands.Update;
+using Agenda.Application.Features.Activities.Queries.GetAll;
+using Agenda.Application.Features.Activities.Queries.GetByDueDateRange;
+using Agenda.Application.Features.Activities.Queries.GetById;
+using Agenda.Application.Features.Activities.Queries.GetByStatus;
+using Agenda.Application.Features.Activities.Queries.GetByTitle;
+using Agenda.Application.ViewModels.DTO.Activity;
+using Agenda.Domain.Enuns.ActivityPriority;
 using Agenda.Domain.Enuns.ActivityStatus;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TrilhaApiDesafio.Context;
 
 namespace TrilhaApiDesafio.Controllers;
 
@@ -9,89 +24,155 @@ namespace TrilhaApiDesafio.Controllers;
 [Route("[controller]")]
 public class ActivityController : ControllerBase
 {
-    private readonly OrganizadorContext _context;
+    private readonly IMediator _mediator;
 
-    public ActivityController(OrganizadorContext context)
+    public ActivityController(IMediator mediator)
     {
-        _context = context;
+        _mediator = mediator;
     }
 
-    [HttpGet("GetById/{id}")]
-    public IActionResult GetById(long id)
+    #region Read
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(long id)
     {
-        // Activity: Buscar o Id no banco utilizando o EF
-        // Activity: Validar o tipo de retorno. Se não encontrar a Activity, retornar NotFound,
-        // caso contrário retornar OK com a Activity encontrada
-        return Ok();
+        var activity = await _mediator.Send(new GetByIdActivitiesQuery(id));
+        return activity != null ? Ok(activity) : NotFound();
     }
 
-    [HttpGet("GetAll")]
-    public IActionResult GetAll()
+    [HttpGet()]
+    public async Task<IActionResult> GetAll()
     {
-        // Activity: Buscar todas as Activitys no banco utilizando o EF
-        return Ok();
+        var listActivity = await _mediator.Send(new GetAllActivitiesQuery());
+        return Ok(listActivity);
     }
 
-    [HttpGet("GetByTitle")]
-    public IActionResult ObterPorTitulo(string titulo)
+    [HttpGet("by-title")]
+    public async Task<IActionResult> GetByTitle([FromQuery] GetByTitleActivitiesQuery getByTitleActivitiesQuery)
     {
-        // Activity: Buscar  as Activitys no banco utilizando o EF, que contenha o titulo recebido por parâmetro
-        // Dica: Usar como exemplo o endpoint ObterPorData
-        return Ok();
+        var listActivity = await _mediator.Send(getByTitleActivitiesQuery);
+        return Ok(listActivity);
     }
 
-    [HttpGet("GetByDueDate")]
-    public IActionResult ObterPorData(DateTime data)
+    [HttpGet("by-due-date-range")]
+    public async Task<IActionResult> GetByDueDateRange([FromQuery] GetByDueDateRangeActivitiesQuery getByDueDateRangeActivitiesQuery)
     {
-        var Activity = _context.Activitys.Where(x => x.DueDate.Date == data.Date);
-        return Ok(Activity);
+        var listActivity = await _mediator.Send(getByDueDateRangeActivitiesQuery);
+        return Ok(listActivity);
     }
 
-    [HttpGet("GetByStatus")]
-    public IActionResult ObterPorStatus(EnumActivityStatus status)
+    [HttpGet("by-status")]
+    public async Task<IActionResult> GetByStatus(EnumActivityStatus status)
     {
-        // Activity: Buscar  as Activitys no banco utilizando o EF, que contenha o status recebido por parâmetro
-        // Dica: Usar como exemplo o endpoint ObterPorData
-        var Activity = _context.Activitys.Where(x => x.Status == status);
-        return Ok(Activity);
+        var listActivity = await _mediator.Send(new GetByStatusActivitiesQuery(status));
+        return Ok(listActivity);
     }
+    #endregion
 
-    [HttpPost("Create")]
-    public IActionResult Create(Activity activity)
+    #region Create
+    [HttpPost()]
+    public async Task<IActionResult> Create(InputCreateActivity inputCreateActivity)
     {
-        if (activity.DueDate == DateTime.MinValue)
-            return BadRequest(new { Erro = "A data da Activity não pode ser vazia" });
+        var command = new CreateActivityCommand(inputCreateActivity.Title,
+                                                inputCreateActivity.Description,
+                                                inputCreateActivity.Priority,
+                                                inputCreateActivity.DueDate);
 
-        // Activity: Adicionar a Activity recebida no EF e salvar as mudanças (save changes)
-        //return CreatedAtAction(nameof(ObterPorId), new { id = Activity.Id }, Activity);
-        return Ok();
+        var activityId = await _mediator.Send(command);
+
+        return CreatedAtAction(nameof(GetById), new { id = activityId }, new { id = activityId });
     }
+    #endregion
 
-    [HttpPut("Update/{id}")]
-    public IActionResult Update(long id, Activity Activity)
+    #region Update
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(long id, [FromBody] InputUpdateActivity inputUpdateActivity)
     {
-        var ActivityBanco = _context.Activitys.Find(id);
+        var command = new UpdateActivityCommand(
+            id,
+            inputUpdateActivity.Title,
+            inputUpdateActivity.Description,
+            inputUpdateActivity.Priority,
+            inputUpdateActivity.DueDate);
 
-        if (ActivityBanco == null)
-            return NotFound();
+        await _mediator.Send(command);
 
-        if (Activity.DueDate == DateTime.MinValue)
-            return BadRequest(new { Erro = "A data da Activity não pode ser vazia" });
-
-        // Activity: Atualizar as informações da variável ActivityBanco com a Activity recebida via parâmetro
-        // Activity: Atualizar a variável ActivityBanco no EF e salvar as mudanças (save changes)
-        return Ok();
-    }
-
-    [HttpDelete("Delete/{id}")]
-    public IActionResult Delete(long id)
-    {
-        var ActivityBanco = _context.Activitys.Find(id);
-
-        if (ActivityBanco == null)
-            return NotFound();
-
-        // Activity: Remover a Activity encontrada através do EF e salvar as mudanças (save changes)
         return NoContent();
     }
+    #endregion
+
+    #region Delete
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(long id)
+    {
+        var command = new DeleteActivityCommand(id);
+        await _mediator.Send(command);
+        return NoContent();
+    }
+    #endregion
+
+    #region Actions(Start/Pause/Complete/Cancel)
+    [HttpPatch("{id}/change-due-date")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChangeDueDate([FromQuery] long id, [FromBody] DateTimeOffset? dueDate)
+    {
+        var command = new UpdateDueDateActivityCommand(id, dueDate);
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPatch("{id}/change-priority")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChangePriority(long id, EnumActivityPriority priority)
+    {
+        var command = new UpdatePriorityActivityCommand(id, priority);
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPatch("{id}/start")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Start(long id)
+    {
+        var command = new StartActivityCommand(id);
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPatch("{id}/pause")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Pause(long id)
+    {
+        var command = new PauseActivityCommand(id);
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPatch("{id}/complete")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Complete(long id)
+    {
+        var command = new CompleteActivityCommand(id);
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPatch("{id}/cancel")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Cancel(long id)
+    {
+        var command = new CancelActivityCommand(id);
+        await _mediator.Send(command);
+        return Ok();
+    }
+    #endregion
 }
