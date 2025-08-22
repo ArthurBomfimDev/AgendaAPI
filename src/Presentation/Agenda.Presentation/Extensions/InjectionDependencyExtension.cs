@@ -1,4 +1,4 @@
-﻿using Agenda.Application.Common.Behaviour;
+using Agenda.Application.Common.Behaviour;
 using Agenda.Application.Features.Activities.Commands.Create;
 using Agenda.Application.Interfaces.Context;
 using Agenda.Application.Interfaces.Repository.Read;
@@ -24,7 +24,7 @@ public static class InjectionDependencyExtension
 
         var applicationAssembly = typeof(CreateActivityCommand).Assembly;
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(applicationAssembly));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(applicationAssembly));
         services.AddValidatorsFromAssembly(applicationAssembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 

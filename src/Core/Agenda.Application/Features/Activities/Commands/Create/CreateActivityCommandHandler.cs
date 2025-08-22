@@ -18,11 +18,11 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
 
     public async Task<long> Handle(CreateActivityCommand request, CancellationToken cancellationToken)
     {
-        var acitivity = Activity.Create(request.Title, request.Description, request.Priority, request.DueDate);
+        var activity = Activity.Create(request.Title, request.Description, request.Priority, request.DueDate);
 
-        await _activityRepository.Create(acitivity);
+        await _activityRepository.Create(activity);
         await _unitOfWork.SaveChangesAsync();
 
-        return acitivity.Id;
+        return activity.Id;
     }
 }
