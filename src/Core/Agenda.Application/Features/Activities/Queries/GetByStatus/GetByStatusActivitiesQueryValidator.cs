@@ -1,7 +1,7 @@
 ﻿using Agenda.Application.Features.Activities.Queries.GetByStatus;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Queries.GetByStatus;
+namespace Agenda.Application.Features.Activities.Queries.GetByStatus;
 
 public class GetByStatusActivitiesQueryValidator : AbstractValidator<GetByStatusActivitiesQuery>
 {

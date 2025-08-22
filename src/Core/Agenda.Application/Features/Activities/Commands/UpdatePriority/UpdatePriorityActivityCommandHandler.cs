@@ -4,7 +4,7 @@ using Agenda.Application.Interfaces.UnitOfWork;
 using Agenda.Domain.Entities;
 using MediatR;
 
-namespace Agenda.Application.Features.Acitivities.Commands.UpdatePriority;
+namespace Agenda.Application.Features.Activities.Commands.UpdatePriority;
 
 public class UpdatePriorityActivityCommandHandler : IRequestHandler<UpdatePriorityActivityCommand, Unit>
 {

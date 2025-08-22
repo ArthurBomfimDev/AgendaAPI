@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Agenda.Application.Features.Acitivities.Commands.UpdateDueDate;
+namespace Agenda.Application.Features.Activities.Commands.UpdateDueDate;
 
 public record UpdateDueDateActivityCommand(
     long Id,

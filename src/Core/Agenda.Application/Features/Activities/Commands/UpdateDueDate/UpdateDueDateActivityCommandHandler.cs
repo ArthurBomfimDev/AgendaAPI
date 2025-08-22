@@ -4,7 +4,7 @@ using Agenda.Application.Interfaces.UnitOfWork;
 using Agenda.Domain.Entities;
 using MediatR;
 
-namespace Agenda.Application.Features.Acitivities.Commands.UpdateDueDate;
+namespace Agenda.Application.Features.Activities.Commands.UpdateDueDate;
 
 public class UpdateDueDateActivityCommandHandler : IRequestHandler<UpdateDueDateActivityCommand, Unit>
 {

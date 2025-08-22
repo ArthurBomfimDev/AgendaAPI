@@ -2,7 +2,7 @@
 using Agenda.Application.Features.Extension.Validation;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Queries.GetById;
+namespace Agenda.Application.Features.Activities.Queries.GetById;
 
 public class GetByIdActivitiesQueryValidator : AbstractValidator<GetByIdActivitiesQuery>
 {

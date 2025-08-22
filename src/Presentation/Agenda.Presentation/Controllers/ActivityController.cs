@@ -1,5 +1,5 @@
-using Agenda.Application.Features.Acitivities.Commands.UpdateDueDate;
-using Agenda.Application.Features.Acitivities.Commands.UpdatePriority;
+using Agenda.Application.Features.Activities.Commands.UpdateDueDate;
+using Agenda.Application.Features.Activities.Commands.UpdatePriority;
 using Agenda.Application.Features.Activities.Commands.Cancel;
 using Agenda.Application.Features.Activities.Commands.Complete;
 using Agenda.Application.Features.Activities.Commands.Create;

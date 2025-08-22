@@ -1,7 +1,7 @@
 ﻿using Agenda.Application.Features.Extension.Validation;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Commands.UpdatePriority;
+namespace Agenda.Application.Features.Activities.Commands.UpdatePriority;
 
 public class UpdatePriorityActivityCommandValidator : AbstractValidator<UpdatePriorityActivityCommand>
 {

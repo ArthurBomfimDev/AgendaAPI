@@ -1,7 +1,7 @@
 ﻿using Agenda.Application.Features.Activities.Queries.GetByDueDateRange;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Queries.GetByDueDateRange;
+namespace Agenda.Application.Features.Activities.Queries.GetByDueDateRange;
 
 public class GetByDueDateRangeActivitiesQueryValidator : AbstractValidator<GetByDueDateRangeActivitiesQuery>
 {

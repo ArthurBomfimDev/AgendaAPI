@@ -1,7 +1,7 @@
 ﻿using Agenda.Application.Features.Activities.Queries.GetByTitle;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Queries.GetByTitle;
+namespace Agenda.Application.Features.Activities.Queries.GetByTitle;
 
 partial class GetByTitleActivitiesQueryValidator : AbstractValidator<GetByTitleActivitiesQuery>
 {

@@ -1,7 +1,7 @@
 ﻿using Agenda.Application.Features.Extension.Validation;
 using FluentValidation;
 
-namespace Agenda.Application.Features.Acitivities.Commands.UpdateDueDate;
+namespace Agenda.Application.Features.Activities.Commands.UpdateDueDate;
 
 public class UpdateDueDateActivityCommandValidator : AbstractValidator<UpdateDueDateActivityCommand>
 {
