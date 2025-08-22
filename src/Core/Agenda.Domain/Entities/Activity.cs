@@ -178,6 +178,7 @@ public class Activity : BaseEntity<Activity>
         }
     }
 
+    public TimeSpan? RemainingTime => CalculateRemainingTime(DateTimeOffset.UtcNow);
     public TimeSpan ElapsedSinceCreationNow => CalculateElapsedSinceCreation(DateTimeOffset.UtcNow);
 
     public TimeSpan WorkedDurationUntilNow => CalculateWorkedDuration(DateTimeOffset.UtcNow);
@@ -185,6 +186,11 @@ public class Activity : BaseEntity<Activity>
     public TimeSpan DelayDurationUntilNow => CalculateDelayDuration(DateTimeOffset.UtcNow);
 
     private TimeSpan CalculateElapsedSinceCreation(DateTimeOffset pointInTime) => pointInTime - CreatedDate;
+
+    private TimeSpan? CalculateRemainingTime(DateTimeOffset pointInTime)
+    {
+        return DueDate.HasValue ? DueDate - pointInTime : null;
+    }
 
     private TimeSpan CalculateWorkedDuration(DateTimeOffset pointInTime)
     {
@@ -204,5 +210,7 @@ public class Activity : BaseEntity<Activity>
         }
         return TimeSpan.Zero;
     }
+
+
     #endregion
 }

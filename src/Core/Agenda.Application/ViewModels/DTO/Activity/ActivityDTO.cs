@@ -18,6 +18,7 @@ public record ActivityDTO(
     TimeSpan? FinalWorkedTime,
     TimeSpan? DelayDuration,
     bool IsOverdue,
+    TimeSpan? RemainingTime,
     TimeSpan ElapsedSinceCreationUntilNow,
     TimeSpan WorkedDurationUntilNow,
     TimeSpan DelayDurationUntilNow,

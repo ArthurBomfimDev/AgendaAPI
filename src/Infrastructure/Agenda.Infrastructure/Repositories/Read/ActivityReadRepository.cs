@@ -19,7 +19,7 @@ public class ActivityReadRepository : IActivityReadRepository
     {
         var now = DateTimeOffset.UtcNow;
 
-        var activities = await _context.Activities
+        var listActivity = await _context.Activities
                                 .AsNoTracking()
                                 .Select(a => new
                                 {
@@ -43,8 +43,10 @@ public class ActivityReadRepository : IActivityReadRepository
                                 })
                                 .ToListAsync();
 
-        return activities.Select(a =>
+        return listActivity.Select(a =>
         {
+            TimeSpan? remainingTime = a.DueDate.HasValue ? a.DueDate.Value - now : null;
+
             var elapsedSinceCreationNow = now - a.CreatedDate;
 
             var workedUntilNow = TimeSpan.FromHours(
@@ -70,6 +72,7 @@ public class ActivityReadRepository : IActivityReadRepository
                 a.FinalWorkedTime,
                 a.DelayDuration,
                 isOverdue,
+                remainingTime,
                 elapsedSinceCreationNow,
                 workedUntilNow,
                 delayUntilNow,
@@ -120,6 +123,8 @@ public class ActivityReadRepository : IActivityReadRepository
 
         return listActivity.Select(a =>
         {
+            TimeSpan? remainingTime = a.DueDate.HasValue ? a.DueDate.Value - now : null;
+
             var elapsedSinceCreationNow = now - a.CreatedDate;
 
             var workedUntilNow = TimeSpan.FromHours(
@@ -145,6 +150,7 @@ public class ActivityReadRepository : IActivityReadRepository
                 a.FinalWorkedTime,
                 a.DelayDuration,
                 isOverdue,
+                remainingTime,
                 elapsedSinceCreationNow,
                 workedUntilNow,
                 delayUntilNow,
@@ -186,6 +192,8 @@ public class ActivityReadRepository : IActivityReadRepository
         if (query == null)
             return null;
 
+        TimeSpan? remainingTime = query.DueDate.HasValue ? query.DueDate.Value - now : null;
+
         var elapsedSinceCreationNow = now - query.CreatedDate;
 
         var workedUntilNow = TimeSpan.FromHours(
@@ -195,7 +203,8 @@ public class ActivityReadRepository : IActivityReadRepository
 
         var delayUntilNow = isOverdue ? now - query.DueDate!.Value : TimeSpan.Zero;
 
-        return new ActivityDTO(
+        return new ActivityDTO
+            (
                 query.Id,
                 query.Title,
                 query.Description,
@@ -210,6 +219,7 @@ public class ActivityReadRepository : IActivityReadRepository
                 query.FinalWorkedTime,
                 query.DelayDuration,
                 isOverdue,
+                remainingTime,
                 elapsedSinceCreationNow,
                 workedUntilNow,
                 delayUntilNow,
@@ -250,6 +260,8 @@ public class ActivityReadRepository : IActivityReadRepository
 
         return queries.Select(a =>
         {
+            TimeSpan? remainingTime = a.DueDate.HasValue ? a.DueDate.Value - now : null;
+
             var elapsedSinceCreationNow = now - a.CreatedDate;
 
             var workedUntilNow = TimeSpan.FromHours(
@@ -275,6 +287,7 @@ public class ActivityReadRepository : IActivityReadRepository
                 a.FinalWorkedTime,
                 a.DelayDuration,
                 isOverdue,
+                remainingTime,
                 elapsedSinceCreationNow,
                 workedUntilNow,
                 delayUntilNow,
@@ -313,11 +326,12 @@ public class ActivityReadRepository : IActivityReadRepository
                 a.ChangedDate,
                 a.IsActive,
                 TimeLogs = a.TimeLogs.Select(t => new { t.StartTime, t.EndTime }).ToList()
-            })
-            .ToListAsync();
+            }).ToListAsync();
 
         return queries.Select(a =>
         {
+            TimeSpan? remainingTime = a.DueDate.HasValue ? a.DueDate.Value - now : null;
+
             var elapsedSinceCreationNow = now - a.CreatedDate;
 
             var workedUntilNow = TimeSpan.FromHours(
@@ -343,6 +357,7 @@ public class ActivityReadRepository : IActivityReadRepository
                 a.FinalWorkedTime,
                 a.DelayDuration,
                 isOverdue,
+                remainingTime,
                 elapsedSinceCreationNow,
                 workedUntilNow,
                 delayUntilNow,

@@ -22,6 +22,7 @@ public static class ActivityMapper
                                 activity.FinalWorkedTime,
                                 activity.DelayDuration,
                                 activity.IsOverdue,
+                                activity.RemainingTime,
                                 activity.ElapsedSinceCreationNow,
                                 activity.WorkedDurationUntilNow,
                                 activity.DelayDurationUntilNow,
