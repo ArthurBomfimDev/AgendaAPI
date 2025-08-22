@@ -70,6 +70,11 @@ Ciclo de Vida Claro: O fluxo de status (Pendente, Em Andamento, Pausado, Conclu�
 <td>Prazo final para a conclusão da atividade (campo nullable, para atividades sem prazo definido).</td>
 </tr>
 <tr>
+<td><strong>RemainingTime</strong></td>
+<td><code>TimeSpan?</code></td>
+<td>Tempo restante para conclusão da tarefa (Pode ser null, pois nem toda tarefa tem prazo).</td>
+</tr>
+<tr>
 <td><strong>FinalWorkedTime</strong></td>
 <td><code>TimeSpan?</code></td>
 <td><strong>Tempo total efetivamente trabalhado</strong>, somando todos os períodos em que a atividade esteve "Em Andamento".</td>
